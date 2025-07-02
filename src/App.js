@@ -4,14 +4,22 @@ import { useEffect, useState } from "react";
 
 function App() {
   const [countries, setCountries] = useState([]);
-  // countries = [
-  // { name: "Afghanistan", flag: "https://flagcdn.com/w320/af.png", abbr: "af" },
-  // ] ]
+  
+  // Fetch countries data from the API when the component mounts
   useEffect(() => {
-    fetch("https://xcountries-backend.azurewebsites.net/all")
-      .then((response) => response.json())
-      .then((data) => setCountries(data))
-      .catch((error) => console.error("Error fetching data: ", error));
+    const fetchCountries = async () => {
+      try {
+        const response = await fetch("https://xcountries-backend.azurewebsites.net/all");
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const data = await response.json();
+        setCountries(data);
+      } catch (error) {
+        console.error("Error fetching countries: ", error);
+      }
+    };
+    fetchCountries();
   }, []);
 
   return (
