@@ -11,7 +11,7 @@ function App() {
     fetch("https://xcountries-backend.azurewebsites.net/all")
       .then((response) => response.json())
       .then((data) => setCountries(data))
-      .catch((error) => console.error("Error fetching countries:", error));
+      .catch((error) => console.error("Error fetching data: ", error));
   }, []);
 
   return (
