@@ -1,19 +1,42 @@
-import logo from "./logo.svg";
 import "./App.css";
 import { useEffect, useState } from "react";
 
 function App() {
+  const [allCountries, setAllCountries] = useState([]);
   const [countries, setCountries] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
-  const api = "https://xcountries-backend.azurewebsites.net/all";
+  const api = "https://countries-search-data-prod-812920491762.asia-south1.run.app/countries?";
 
   // Fetch countries data from the API when the component mounts
   useEffect(() => {
     fetch(api)
       .then((response) => response.json())
-      .then((data) => setCountries(data))
+      .then((data) => {
+        setCountries(data);
+        setAllCountries(data);
+      })
       .catch((error) => console.error("Error fetching data: ", error));
   }, []);
+
+  useEffect(() => {
+    if (!searchTerm || searchTerm === "") {
+      setCountries(allCountries);
+      return;
+    }
+    const timeout = setTimeout(() => {
+      handelSearch(searchTerm);
+    }, 1000);
+    return () => clearTimeout(timeout);
+  }, [searchTerm]);
+
+  const handelSearch = (searchTerm) => {
+    const filteredCountries = allCountries.filter(
+      (country) =>
+        country.common.toLowerCase().includes(searchTerm)
+    );
+    setCountries(filteredCountries);
+  };
 
   return (
     <div className="App">
@@ -29,10 +52,30 @@ function App() {
           gap: "20px",
         }}
       >
+        <header
+          style={{
+            width: "100%",
+            textAlign: "center",
+            marginBottom: "20px",
+          }}
+        >
+          <input
+            type="text"
+            style={{
+              width: "50%",
+              padding: "10px",
+              borderRadius: "5px",
+              border: "1px solid #ccc",
+            }}
+            placeholder="Search for a country..."
+            onChange={(e) => setSearchTerm(e.target.value)}
+            autoFocus
+          />
+        </header>
         {countries.length &&
-          countries.map((country) => (
+          countries.map((country, idx) => (
             <div
-              key={country.abbr}
+              key={country.common + idx}
               style={{
                 border: "1px solid #ccc",
                 padding: "10px",
@@ -43,11 +86,11 @@ function App() {
               }}
             >
               <img
-                src={country.flag}
-                alt={"Flag of " + country.abbr}
+                src={country.png}
+                alt={"Flag of " + country.common}
                 style={{ width: "100px", height: "60px" }}
               />
-              <p>{country.name}</p>
+              <p>{country.common}</p>
             </div>
           ))}
       </div>
