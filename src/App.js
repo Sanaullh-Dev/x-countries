@@ -76,6 +76,7 @@ function App() {
           countries.map((country, idx) => (
             <div
               key={country.common + idx}
+              className="countryCard"
               style={{
                 border: "1px solid #ccc",
                 padding: "10px",
