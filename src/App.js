@@ -6,6 +6,7 @@ function App() {
   const [countries, setCountries] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
 
+  // API endpoint to fetch countries data
   const api = "https://countries-search-data-prod-812920491762.asia-south1.run.app/countries?";
 
   // Fetch countries data from the API when the component mounts
